@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lighthouse Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-1: #f5efe4;
+      --bg-2: #d8e3da;
+      --ink: #102016;
+      --ink-soft: #294737;
+      --accent: #e86f3d;
+      --accent-2: #0f8a5f;
+      --card: rgba(255, 255, 255, 0.72);
+      --card-border: rgba(16, 32, 22, 0.14);
+      --shadow: 0 12px 35px rgba(16, 32, 22, 0.14);
+      --radius-xl: 26px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(1200px 700px at -10% -20%, rgba(232, 111, 61, 0.24), transparent 58%),
+        radial-gradient(1200px 700px at 120% -20%, rgba(15, 138, 95, 0.22), transparent 55%),
+        linear-gradient(140deg, var(--bg-1), var(--bg-2));
+      padding: clamp(1rem, 2vw, 2rem);
+      overflow-x: hidden;
+    }
+
+    .page {
+      max-width: 1060px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(20px);
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-a {
+      width: 220px;
+      height: 220px;
+      background: #f47f4f;
+      top: -40px;
+      left: -40px;
+      animation: drift-a 8s ease-in-out infinite alternate;
+    }
+
+    .orb-b {
+      width: 190px;
+      height: 190px;
+      background: #22a977;
+      top: 180px;
+      right: -20px;
+      animation: drift-b 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift-a {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(22px, 14px) scale(1.05); }
+    }
+
+    @keyframes drift-b {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(-18px, -20px) scale(1.08); }
+    }
+
+    .hero,
+    .panel {
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(6px);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+    }
+
+    .hero {
+      padding: clamp(1.3rem, 2.5vw, 2rem);
+      display: grid;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      transform: translateY(8px);
+      opacity: 0;
+      animation: fade-up 650ms ease forwards;
+    }
+
+    @keyframes fade-up {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 3rem);
+      line-height: 1.04;
+      max-width: 18ch;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: clamp(0.98rem, 1.8vw, 1.1rem);
+      color: var(--ink-soft);
+      max-width: 65ch;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.35rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.42rem 0.74rem;
+      border: 1px solid rgba(16, 32, 22, 0.13);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.75);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.77rem;
+      color: #1f372b;
+    }
+
+    .panel {
+      padding: clamp(1rem, 2vw, 1.4rem);
+      animation: fade-up 720ms ease 90ms both;
+    }
+
+    .status {
+      margin: 0 0 0.8rem;
+      color: #2e4f3f;
+      font-size: 0.95rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(16, 32, 22, 0.12);
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.9), rgba(250, 251, 249, 0.68));
+      padding: 0.9rem;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: card-in 360ms ease forwards;
+    }
+
+    @keyframes card-in {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(16, 32, 22, 0.3);
+      box-shadow: 0 8px 20px rgba(16, 32, 22, 0.12);
+      outline: none;
+    }
+
+    .card-title {
+      margin: 0 0 0.3rem;
+      font-size: 1.02rem;
+      line-height: 1.25;
+    }
+
+    .card-meta {
+      margin: 0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.75rem;
+      color: #365845;
+      word-break: break-all;
+    }
+
+    .empty {
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(16, 32, 22, 0.25);
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.5);
+      color: #2e4f3f;
+    }
+
+    .hint {
+      margin-top: 0.8rem;
+      font-size: 0.86rem;
+      color: #385a48;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    @media (max-width: 680px) {
+      .hero,
+      .panel {
+        border-radius: 18px;
+      }
+
+      .subtitle {
+        max-width: 45ch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="orb orb-a" aria-hidden="true"></div>
+    <div class="orb orb-b" aria-hidden="true"></div>
+
+    <section class="hero" aria-labelledby="page-title">
+      <p class="label">Audit Dashboard</p>
+      <h1 id="page-title">Google Lighthouse Report Archive</h1>
+      <p class="subtitle">This page discovers Lighthouse report files in this folder and keeps the list updated automatically.</p>
+      <div class="meta-row">
+        <span class="pill" id="reportCount">Reports: 0</span>
+        <span class="pill" id="sourceInfo">Source: loading...</span>
+      </div>
+    </section>
+
+    <section class="panel" aria-live="polite">
+      <p class="status" id="status">Loading report list...</p>
+      <div class="grid" id="reportGrid"></div>
+      <p class="hint">Tip: Place new Lighthouse HTML files in this same folder, update reports.json, then refresh.</p>
+    </section>
+  </main>
+
+  <script>
+    const REPORT_GRID = document.getElementById("reportGrid");
+    const STATUS = document.getElementById("status");
+    const REPORT_COUNT = document.getElementById("reportCount");
+    const SOURCE_INFO = document.getElementById("sourceInfo");
+
+    function parseTimestamp(name) {
+      const match = name.match(/(\d{8})T(\d{6})/);
+      if (!match) {
+        return null;
+      }
+
+      const [_, datePart, timePart] = match;
+      const iso = `${datePart.slice(0, 4)}-${datePart.slice(4, 6)}-${datePart.slice(6, 8)}T${timePart.slice(0, 2)}:${timePart.slice(2, 4)}:${timePart.slice(4, 6)}Z`;
+      const d = new Date(iso);
+      return Number.isNaN(d.getTime()) ? null : d;
+    }
+
+    function cleanName(fileName) {
+      return fileName
+        .replace(/\.html$/i, "")
+        .replace(/-\d{8}T\d{6}$/, "")
+        .replace(/[._-]+/g, " ")
+        .trim();
+    }
+
+    function normalizeFilePath(path) {
+      return path.startsWith("./") ? path : `./${path}`;
+    }
+
+    function createCard(item, index) {
+      const card = document.createElement("a");
+      card.className = "card";
+      card.href = normalizeFilePath(item.path);
+      card.target = "_blank";
+      card.rel = "noopener noreferrer";
+      card.style.animationDelay = `${60 + index * 45}ms`;
+
+      const title = document.createElement("h3");
+      title.className = "card-title";
+      title.textContent = cleanName(item.name) || item.name;
+
+      const meta = document.createElement("p");
+      meta.className = "card-meta";
+      meta.textContent = item.date ? item.date.toLocaleString() : item.name;
+
+      card.append(title, meta);
+      return card;
+    }
+
+    function renderList(items, sourceLabel) {
+      REPORT_GRID.innerHTML = "";
+      REPORT_COUNT.textContent = `Reports: ${items.length}`;
+      SOURCE_INFO.textContent = `Source: ${sourceLabel}`;
+
+      if (!items.length) {
+        STATUS.textContent = "No Lighthouse report HTML files found yet.";
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Drop report files here using a pattern like domain-YYYYMMDDTHHMMSS.html";
+        REPORT_GRID.append(empty);
+        return;
+      }
+
+      STATUS.textContent = "Latest reports are shown first.";
+      const sorted = [...items].sort((a, b) => {
+        if (a.date && b.date) {
+          return b.date - a.date;
+        }
+        if (a.date) {
+          return -1;
+        }
+        if (b.date) {
+          return 1;
+        }
+        return a.name.localeCompare(b.name);
+      });
+
+      sorted.forEach((item, idx) => REPORT_GRID.append(createCard(item, idx)));
+    }
+
+    function extractFromFileNames(fileNames) {
+      return fileNames
+        .filter((name) => /\.html$/i.test(name))
+        .filter((name) => name.toLowerCase() !== "index.html")
+        .map((name) => ({
+          name,
+          path: name,
+          date: parseTimestamp(name)
+        }));
+    }
+
+    async function tryManifest() {
+      const response = await fetch("./reports.json", { cache: "no-store" });
+      if (!response.ok) {
+        return null;
+      }
+
+      const data = await response.json();
+      if (!Array.isArray(data)) {
+        return null;
+      }
+
+      const files = data.map((item) => String(item || "").trim()).filter(Boolean);
+      const reports = extractFromFileNames(files);
+      return reports.length ? reports : null;
+    }
+
+    async function loadReports() {
+      try {
+        const fromManifest = await tryManifest();
+        if (fromManifest) {
+          renderList(fromManifest, "reports.json");
+          return;
+        }
+
+        renderList([], "none");
+        STATUS.textContent = "No reports detected in reports.json. Add report file names to reports.json.";
+      } catch (error) {
+        console.error("Failed to load reports", error);
+        renderList([], "error");
+        STATUS.textContent = "Could not load reports.json. Ensure the file is valid JSON and accessible from this folder.";
+      }
+    }
+
+    loadReports();
+  </script>
+</body>
+</html>
